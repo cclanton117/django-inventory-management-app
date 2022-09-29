@@ -1,0 +1,53 @@
+CREATE TABLE `abc_logs` (
+  `change_id` int DEFAULT NULL,
+  `username` varchar(40) DEFAULT NULL,
+  `action_taken` varchar(55) DEFAULT NULL,
+  `action_used_on` varchar(55) DEFAULT NULL,
+  `changed_date` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `client_info` (
+  `client_id` int NOT NULL AUTO_INCREMENT,
+  `client_name` varchar(40) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `phone_number` char(12) NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`client_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `client_contacts` (
+  `client_contacts_id` int NOT NULL AUTO_INCREMENT,
+  `client_id` int NOT NULL,
+  `email_address` varchar(40) NOT NULL,
+  `phone_number` char(12) NOT NULL,
+  `contact_name` varchar(50) NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`client_contacts_id`),
+  KEY `fk_client_info_contact_idx` (`client_id`),
+  CONSTRAINT `fk_client_info_contact` FOREIGN KEY (`client_id`) REFERENCES `client_info` (`client_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `inventory` (
+  `inventory_id` int NOT NULL AUTO_INCREMENT,
+  `item_name` varchar(40) NOT NULL,
+  `storage_type` varchar(40) NOT NULL,
+  `max_item_capacity` int NOT NULL,
+  `client_id` int NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`inventory_id`),
+  KEY `fk_client_inventory_idx` (`client_id`),
+  CONSTRAINT `fk_client_inventory` FOREIGN KEY (`client_id`) REFERENCES `client_info` (`client_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `resources` (
+  `resource_id` int NOT NULL AUTO_INCREMENT,
+  `resource_name` varchar(40) NOT NULL,
+  `resource_type` varchar(40) NOT NULL,
+  `max_num_resources` int NOT NULL,
+  `current_num_resources` int NOT NULL,
+  `inventory_id` int NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`resource_id`),
+  KEY `fk_inventory_resource_idx` (`inventory_id`),
+  CONSTRAINT `fk_inventory_resource` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`inventory_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
